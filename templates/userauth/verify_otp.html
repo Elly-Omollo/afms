@@ -1,0 +1,24 @@
+{% extends 'base/userauth_base.html' %}
+    {% load static %}
+    {% block title %}AFMS - OTP Verification{% endblock %}
+{% block content %}
+    <div class="container1">
+        <img src="{% static 'otp.png' %}" alt="OTP">
+        <h2>OTP Verification</h2>
+        <p>Enter the OTP sent to your email to verify your account.</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div class="input-group">
+                <span class="input-group-text "><i class="bi bi-key-fill"></i></span>
+                <input type="text" name="otp" class="form-control" placeholder="Enter OTP" required>
+            </div>
+            <button type="submit" class="btn">Verify</button>
+
+            {% if error %}
+                <p class="error-message">{{ error }}</p>
+            {% endif %}
+        </form>
+    </div>
+
+{% endblock %}

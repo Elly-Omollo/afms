@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration & Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eafaea;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .form-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        h2 {
+            color: #008000;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+            position: relative;
+        }
+        .input-group label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            transition: 0.3s;
+            color: black;
+        }
+        .input-group input, .input-group select {
+            width: 80%;
+            padding: 10px;
+            border: none;
+            /* border-bottom: 1px solid #ccc; */
+            font-size: 16px;
+            outline: none;
+            background: transparent;
+        }
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: -10px;
+            font-size: 12px;
+            color: #008000;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #008000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background-color: #006400;
+        }
+        .switch-form {
+            margin-top: 10px;
+            cursor: pointer;
+            color: #008000;
+        }
+        .popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #008000;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+        }
+        @media (max-width: 600px) {
+            .form-box {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-box" data-aos="fade-up">
+            <h2 id="form-title">Register</h2>
+            <form id="registrationForm">
+                <div class="input-group">
+                    <input type="text" id="name" placeholder=" " required>
+                    <label for="name">Full Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" placeholder=" " required>
+                    <label for="email">Email</label>
+                </div>
+                <div class="input-group">
+                    <select id="role" required>
+                        <option value="">Select Role</option>
+                        <option value="farmer">Farmer</option>
+                        <option value="livestock_keeper">Livestock Keeper</option>
+                        <option value="driver">Driver</option>
+                        <option value="poultry_farmer">Poultry Farmer</option>
+                        <option value="farm_medical_provider">Farm Medical Provider</option>
+                        <option value="fertilizer_supplier">Fertilizer Supplier</option>
+                        <option value="farm_equipment_supplier">Farm Equipment Supplier</option>
+                        <option value="buyer">Buyer</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder=" " required>
+                    <label for="password">Password</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="confirm_password" placeholder=" " required>
+                    <label for="confirm_password">Confirm Password</label>
+                </div>
+                <button type="submit" class="btn">Sign Up</button>
+            </form>
+            <p class="switch-form" onclick="toggleForm()">Already have an account? Login</p>
+        </div>
+    </div>
+    <div class="popup" id="popup">Registration successful!</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init();
+
+        function showPopup(message) {
+            let popup = document.getElementById("popup");
+            popup.textContent = message;
+            popup.style.display = "block";
+            setTimeout(() => {
+                popup.style.display = "none";
+            }, 3000);
+        }
+
+        document.getElementById("registrationForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let password = document.getElementById("password").value;
+            let confirmPassword = document.getElementById("confirm_password").value;
+            if (password !== confirmPassword) {
+                showPopup("Passwords do not match!");
+                return;
+            }
+            showPopup("Registration successful!");
+        });
+
+        function toggleForm() {
+            let formTitle = document.getElementById("form-title");
+            let form = document.getElementById("registrationForm");
+            let switchText = document.querySelector(".switch-form");
+            
+            if (formTitle.textContent === "Register") {
+                formTitle.textContent = "Login";
+                form.innerHTML = `
+                    <div class="input-group">
+                        <input type="email" id="login_email" placeholder=" " required>
+                        <label for="login_email">Email</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="login_password" placeholder=" " required>
+                        <label for="login_password">Password</label>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                `;
+                switchText.textContent = "Don't have an account? Register";
+            } else {
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

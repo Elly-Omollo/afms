@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agricultural Farm Management Software</title>
+    <link rel="title-icon" type="image/npg" href="/templates/title-icon.png">
+
+    <!-- FontAwesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- Latest Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Latest Bootstrap 5 JS (includes Popper.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'index.css' %}">
+
+    <!-- aos Animation on scroll  CDN  -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        nav {
+            background-color: #27ae60;
+            /* background-color: #faa718; */
+            /* Green primary color */
+            padding: 10px 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #2ecc71;
+            /* Lighter green on hover */
+            border-radius: 5px;
+        }
+
+        /* Header and Welcome Text */
+        header {
+            background-color: #2ecc71;
+            /* Lighter green */
+            color: white;
+            text-align: center;
+            width: 100vw !important;
+            padding: 50px 20px;
+        }
+
+        header h1 {
+            font-size: 40px;
+        }
+
+        header p {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+
+        /* Search Bar Styles */
+        .search-bar {
+            margin: 20px 0;
+            text-align: center;
+            /* background: transparent; */
+            /* border: 3px solid black; */
+            /* border-radius: 10px; */
+        }
+
+        .search-bar input {
+            padding: 10px;
+            width: 60%;
+            max-width: 400px;
+            border-radius: 5px;
+            border: none;
+            background: rgb(1, 132, 53);
+            color: #dfe4e1;
+            font-weight: 800;
+        }
+
+        /* Product Grid Styles */
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: auto;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .product-card h3 {
+            margin: 10px 0;
+            font-size: 18px;
+            color: #27ae60;
+            /* Green title */
+        }
+
+        .product-card p {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .product-card span {
+            display: block;
+            font-size: 16px;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #27ae60;
+            /* Green for prices and age */
+        }
+
+        .product-header{
+            background-repeat: no-repeat;
+            background-size: cover;
+            /* background-image: url("{% static 'index/farming-8210675_1280.jpg' %}"); */
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .search-bar input {
+                width: 80%;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .search-bar input {
+                width: 90%;
+            }
+        }
+    </style>
+
+
+</head>
+<body class="bg-light" style="overflow-x: hidden;">
+    <nav class="navbar navbar-expand-lg sticky-top ">
+        <div class="container-fluid ">
+            <a class="navbar-brand" href="#">AFMS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="padding-left: 150px;">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'afms_app:products page' %}">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About us</a>
+                    </li>
+
+                    <!--  links to be displayed to our customers only  -->
+
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#crops">Crops</a></li>
+                    <li><a href="#livestock">Livestock</a></li>
+                    <li><a href="#poultry">Poultry</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+
+                </ul>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'userauth:Signup View' %}" class="btn"
+                        style="--bs-btn-padding-y: .2rem; --bs-btn-padding-x: .2rem; --bs-btn-font-size: .95rem; width: fit-content;">
+                        Signup
+                    </a>
+                    <a href="{% url 'userauth:Login View' %}" class="btn"
+                        style="--bs-btn-padding-y: .2rem; --bs-btn-padding-x: .2rem; --bs-btn-font-size: .95rem; width: fit-content;">
+                        Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <div class="container-fluid">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+
+
+
+
+    <!-- bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+        </script>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- =============================== scripst ======================= -->
+    <script>
+        AOS.init();
+        $(document).ready(function () {
+            //Set the carousel options
+            $('#quote-carousel').carousel({
+                pause: true,
+                interval: 6000,
+            });
+        });
+
+        // star rating 
+        var $star_rating = $('.star-rating .fa');
+
+        var SetRatingStar = function () {
+            return $star_rating.each(function () {
+                if (parseInt($star_rating.siblings('input.rating-value').val()) >= parseInt($(this).data('rating'))) {
+                    return $(this).removeClass('fa-star-o').addClass('fa-star');
+                } else {
+                    return $(this).removeClass('fa-star').addClass('fa-star-o');
+                }
+            });
+        };
+
+        $star_rating.on('click', function () {
+            $star_rating.siblings('input.rating-value').val($(this).data('rating'));
+            return SetRatingStar();
+        });
+
+        SetRatingStar();
+        $(document).ready(function () {
+
+        });
+
+
+        // search products functionality
+        function searchProducts() {
+            const searchInput = document.getElementById('search').value.toLowerCase();
+            const products = document.querySelectorAll('.product-card');
+
+            products.forEach(product => {
+                const title = product.querySelector('h3').innerText.toLowerCase();
+                const description = product.querySelector('p').innerText.toLowerCase();
+
+                if (title.includes(searchInput) || description.includes(searchInput)) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
+
+</body>
+
+</html>

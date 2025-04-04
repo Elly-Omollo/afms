@@ -1,0 +1,76 @@
+{% extends 'base/base.html' %}
+
+<!-- {% load static %} -->
+
+{% block content %}
+
+    <div class="container-fluid">
+        
+            <header class="product-header ">
+                <h1>Welcome to Your One-Stop Farm Shop!</h1>
+                <p>Discover the best crops, livestock, and poultry for your farming needs. We make it easy for you to grow and thrive.</p>
+                <div class="search-bar">
+                    <input type="text" id="search" placeholder="Search for products..." onkeyup="searchProducts()">
+                </div>
+            </header>
+        
+            <!-- Search Bar -->
+      
+
+        <!-- Product Listings -->
+        <div class="products" id="product-list">
+            <!-- Sample product 1: Crop -->
+            <div class="product-card" data-category="crop">
+                <img src="https://via.placeholder.com/300x200.png?text=Crop" alt="Rice">
+                <h3>Rice</h3>
+                <p>High-quality rice for farming</p>
+                <span>Price: $50 per bag</span>
+            </div>
+
+            <!-- Sample product 2: Livestock -->
+            <div class="product-card" data-category="livestock">
+                <img src="https://via.placeholder.com/300x200.png?text=Cow" alt="Cow">
+                <h3>Cow</h3>
+                <p>Healthy cow for farming</p>
+                <span>Age: 2 years</span>
+                <span>Price: $1,200</span>
+            </div>
+
+            <!-- Sample product 3: Poultry -->
+            <div class="product-card" data-category="poultry">
+                <img src="https://via.placeholder.com/300x200.png?text=Chicken" alt="Chicken">
+                <h3>Chicken</h3>
+                <p>Egg-laying chicken</p>
+                <span>Age: 1 year</span>
+                <span>Price: $20</span>
+            </div>
+
+            <!-- Sample product 4: Crop -->
+            <div class="product-card" data-category="crop">
+                <img src="https://via.placeholder.com/300x200.png?text=Tomato" alt="Tomato">
+                <h3>Tomato</h3>
+                <p>Fresh tomatoes for sale</p>
+                <span>Price: $15 per crate</span>
+            </div>
+
+            <!-- Sample product 5: Livestock -->
+            <div class="product-card" data-category="livestock">
+                <img src="https://via.placeholder.com/300x200.png?text=Sheep" alt="Sheep">
+                <h3>Sheep</h3>
+                <p>Healthy sheep for farming</p>
+                <span>Age: 1 year</span>
+                <span>Price: $250</span>
+            </div>
+
+            <!-- Sample product 6: Poultry -->
+            <div class="product-card" data-category="poultry">
+                <img src="https://via.placeholder.com/300x200.png?text=Duck" alt="Duck">
+                <h3>Duck</h3>
+                <p>Duck for sale</p>
+                <span>Age: 6 months</span>
+                <span>Price: $35</span>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+
+    /* Calendar Header */
+    .calendar-header {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+        font-weight: bold;
+        padding: 5px;
+        background-color: #f4f4f4;
+    }
+
+    /* Calendar Grid */
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        grid-gap: 5px;
+        padding: 10px;
+    }
+
+/* Default Calendar Day */
+.calendar-day {
+    display: flex;
+    justify-content: center;  /* Centers horizontally */
+    align-items: center;  /* Centers vertically */
+    text-align: center;
+    padding: 15px; /* Increase padding for better spacing */
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 16px;  /* Increase font size */
+    width: 150px;  /* Fixed width */
+    height: 100px; /* Fixed height to make perfect square */
+}
+
+/* Highlight Current Date */
+.current-day {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+/* Hover Effect */
+.calendar-day:hover {
+    background-color: #ddd;
+}
+
+    /* Empty Days (Before 1st of the Month) */
+    .empty-day {
+        background: none;
+        border: none;
+    }

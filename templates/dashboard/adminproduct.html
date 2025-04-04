@@ -1,0 +1,21 @@
+{% extends 'dashboard/ddf.html' %}
+
+{% block title %}AFMS{% endblock %}
+
+{% block page_title %} Products {% endblock %}
+
+{% block content %}
+<div class="content" id="products">
+    <h2> Hey {{user}} you have logged in as {{user.user_type}}. Welcome to the Farm Products </h2>
+    <p>Here you can manage farm activities, products, orders, and more.</p>
+    <ul>
+        {% for product in products %}
+            <li>{{ product.name }} - {{ product.price }}</li>
+        {% empty %}
+            <li>No products available</li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+{% endblock %}

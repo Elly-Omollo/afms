@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Responsive Farm Dashboard{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/dash.css' %}">
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <h2>AFMS</h2>
+    <hr style="height: 2px; background-color: white;" />
+    <ul>
+        <li id="link-dashboard" ><a href="{% url 'userauth:dashboard' %}">Dashboard</a></li>
+        <li id="link-products" ><a href="{% url 'userauth:products' %}">Products</a></li>
+        <li id="link-calendar" ><a href="{% url 'userauth:calender' %}">Calendar</a></li>
+        <li id="link-profile" ><a href="{% url 'userauth:profile' %}">Profile</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content" id="main">
+    <!-- Navbar -->
+    <div class="navbar">
+      <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+      <h1 id="pageTitle">{% block page_title %}{% endblock %}</h1>
+    </div>
+
+    <div class="main">
+        <!-- Page Content -->
+        {% block content %}
+        
+        {% endblock %}
+    </div>
+
+    
+  </div>
+
+  <!-- Include JS file -->
+  <script src="{% static 'js/dash.js' %}"></script>
+</body>
+</html>

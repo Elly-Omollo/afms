@@ -1,0 +1,57 @@
+{% extends 'base/userauth_base.html' %}
+    {% load static %}
+    {% block title %}AFMS - signup{% endblock %}
+{% block content %}
+    <div class="container2">
+        <img src="{% static 'avator.png' %}" alt="Avatar">
+        <h2>Sign Up</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-2">
+                        <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                        {{ form.first_name }}
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                        {{ form.email }}
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
+                        {{ form.gender }}
+                    </div>
+                    <div class="input-group mb-2">
+                        {{ form.user_type }}
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                        {{ form.password1 }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-2">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        {{ form.last_name }}
+                    </div>
+                    <div class="input-group mb-2 my-2">
+                        <span class="input-group-text"><i class="bi2 bi-person"></i></span>
+                        {{ form.username }}
+                    </div>
+                    <div class="input-group mb-2 my-2">
+                        <span class="input-group-text"><i class="bi bi-phone-fill"></i></span>
+                        {{ form.phone }}
+                    </div>
+                    <div class="input-group mb-2 my-2">
+                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                        {{ form.password2 }}
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn mt-2">Sign Up</button>
+            <div class="d-flex my-2 gap-1 justify-content-center align-items-center">
+                Already have an account? <a href="{% url 'userauth:Login View' %}" class="fw-bold">Login</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

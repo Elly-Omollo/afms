@@ -1,0 +1,24 @@
+{% extends 'dashboard/ddf.html' %}
+
+{% block title %}Profile - AFMS{% endblock %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/calender.css' %}">
+
+{% block page_title %}Profile{% endblock %}
+
+{% block content %}
+<div class="content" id="profile">
+    <h2> Hey {{user}} you have logged in as {{user.user_type}}. Welcome to the Farm user profile </h2>
+    <p>Here you can manage farm activities, products, orders, and more.</p>
+
+    <div class="content" id="profile">
+        <h2>User Profile</h2>
+        <div class="profile-card">
+            <img src="https://via.placeholder.com/120" alt="User Picture" />
+            <h2>Jane Doe</h2>
+            <p>Email: janedoe@example.com</p>
+            <p>Phone: +1234567890</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
