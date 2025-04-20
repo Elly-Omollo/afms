@@ -6,7 +6,6 @@
     <!-- 567899999997888888888888wwwwwwwwwwwwwwwwww777777777777788888888888888888888 -->
     <div class="container-fluid shadow-sm rounded d-flex justify-content-center align-items-center first">
         <div class="container1">
-
             <h1 class="">Focus on your passion, not your paperwork.</h1>
 
             <div class="container d-flex "
@@ -16,10 +15,13 @@
                     their
                     operations enabling them to grow more food, more efficiently and sustainably for their communities.
                 </p>
+                {% if user.is_authenticated %}
+                {% else %}
                 <div>
                     <a href="{% url 'userauth:Signup View' %}" class="btn btn-outline-success btn-lg">Signup</a>
                     <a href="{% url 'userauth:Login View' %}" class="btn btn-outline-secondary btn-lg">Login</a>
                 </div>
+                {% endif %}
                 
 
             </div>
@@ -60,9 +62,9 @@
                     Integrated farm accounting, financial planning, budgeting and bookkeeping features purpose built for
                     farms. Simplify financial reporting, cashflow analysis and make tax time a breeze.
                 </p>
-                <button class="custom-button"><a data-testid="linkElement" href="" target="_self"
+                <button class="custom-button"><a data-testid="linkElement" href="" target="_self" 
                         class="uDW_Qe wixui-button PlZyDq" aria-disabled="false"><span
-                            class="l7_2fn wixui-button__label">Farm Management</span></a>
+                            class="l7_2fn wixui-button__label" style="color: aliceblue !important;">Farm Management</span></a>
                 </Button>
             </div>
 
@@ -241,6 +243,33 @@
 
         </div>
 
+        <div class="container bg-light shadow-sm rounded p-3" style="height: 70vh;" data-aos="fade-left">
+            <h4>What other people say about us</h4>
+            <hr>
+            <div class="container d-flex justify-content-center align-items-center m-2 p-2" style="height: 70%; width: 100%;">
+                <div class="col-md-offset-2 col-md-8 d-flex justify-content-center align-items-center">
+                    <div id="quote-carousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner" id="review-carousel-inner">
+                            <!-- JavaScript will inject reviews here -->
+                        </div>
+        
+                        <!-- Carousel Controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#quote-carousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#quote-carousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="text-center mt-3">
+                <a href="{% url 'afms_app:add review' %}" class="btn" style="color: #0b0b0b; background-color: #0ccc7c ; border-radius: 20px; padding: 5px 15px; box-shadow: #222;">Add Review</a>
+            </div>
+        </div>
+        
+
         <div class="container row  justify-content align-items-center" style="height: 60vh; ;">
             <div class="col-4">
                 <div class="" style="border: none; background-color: transparent;">
@@ -249,7 +278,7 @@
                 </div>
                 <div>
                     
-                    <h1> Farm Management</h1>
+                    <h1> Crop Management</h1>
                     <p>Our farm management software helps simplify your crop planning, yield & income projections and
                     easily visualize your season. Collaborate with your team to track and report on farm work, inputs,
                     activities and harvests and simplify ROI and compliance reporting.-</p>
@@ -262,7 +291,7 @@
                 </div>
                 <div>
                     
-                    <h1> Farm Management</h1>
+                    <h1> Livestock Management</h1>
                     <p>Our farm management software helps simplify your crop planning, yield & income projections and
                     easily visualize your season. Collaborate with your team to track and report on farm work, inputs,
                     activities and harvests and simplify ROI and compliance reporting.-</p>
@@ -275,7 +304,7 @@
                 </div>
                 <div>
                     
-                    <h1> Farm Management</h1>
+                    <h1>Poultry Farm Management</h1>
                     <p>Our farm management software helps simplify your crop planning, yield & income projections and
                     easily visualize your season. Collaborate with your team to track and report on farm work, inputs,
                     activities and harvests and simplify ROI and compliance reporting.-</p>
@@ -305,10 +334,14 @@
                 <h3>Join more than 4,000 farmers and ranchers worldwide that are simplifying their farm management with one easy to use farm management software.
                     Get started today.</h3>
             </div>
+            {% if user.is_authenticated %}
+
+            {% else %}
             <div>
                 <a href="{% url 'userauth:Signup View' %}" class="btn btn-outline-success btn-lg">Signup</a>
                 <a href="{% url 'userauth:Login View' %}" class="btn btn-outline-secondary btn-lg">Login</a>
             </div>
+            {% endif %}
             
         </div>
         
@@ -387,11 +420,65 @@
 
     </div>
 
-
-    <div class="container-fuid" style="background-color:#264085; color: #f9f9f9; height: 10vh; padding: 10px;">
-        <div class="container" style="display: flex; justify-content: center; align-items: center;">
-            <p><a href="" target="_blank" style="color: #f9f9f9 !important;">&copy; 2015 elly.softspin.com</a></p>
-        </div>
+    <div class="carousel-inner" id="review-carousel-inner">
+        <!-- JavaScript will insert reviews here -->
     </div>
+    
+
+
+    <script>
+        const getReviews = () => {
+            fetch('/get_reviews/')
+                .then(res => res.json())
+                .then(data => {
+                    const carouselInner = document.getElementById('review-carousel-inner');
+                    carouselInner.innerHTML = ''; // Clear old reviews
+    
+                    if (!data.data || data.data.length === 0) {
+                        carouselInner.innerHTML = `
+                            <div class="carousel-item active">
+                                <blockquote>
+                                    <div class="row">
+                                        <div class="col-sm-12 text-center">
+                                            <p>No reviews available at the moment.</p>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div>
+                        `;
+                        return;
+                    }
+    
+                    data.data.forEach((review, index) => {
+                        const activeClass = index === 0 ? 'active' : '';
+                        const reviewItem = `
+                            <div class="carousel-item ${activeClass}">
+                                <blockquote>
+                                    <div class="row">
+                                        <div class="col-sm-3 text-center">
+                                            <img class="img-circle" src="https://via.placeholder.com/100" alt="Avatar" style="width: 100px; height: 100px;">
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p>${review.messo}</p>
+                                            <small>${review.name}</small>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div>
+                        `;
+                        carouselInner.innerHTML += reviewItem;
+                    });
+                })
+                .catch(err => {
+                    console.error('Error fetching reviews:', err);
+                });
+        }
+    
+        window.onload = getReviews;
+    </script>
+    
+    
+    
+
 
 {% endblock %}

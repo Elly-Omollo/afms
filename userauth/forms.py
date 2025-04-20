@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User  
+from .models import Profile, User
+from django.forms.widgets import ClearableFileInput  
 
 class SignupForm(UserCreationForm):
     first_name = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}))
@@ -16,3 +17,30 @@ class SignupForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'username', 'email', 'phone', 'gender', 'password1', 'password2', 'user_type']
+
+
+
+class CustomUserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'username', 'email', 'phone', 'gender']
+
+    def __init__(self, *args, **kwargs):
+        super(CustomUserUpdateForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = [ 'full_name', 'country', 'state', 'city', 'address']
+        widgets = {
+            'image': ClearableFileInput(attrs={'class': 'form-control-file'})
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileUpdateForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if field.widget.input_type != 'file':
+                field.widget.attrs['class'] = 'form-control'

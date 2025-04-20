@@ -1,75 +1,118 @@
 {% extends 'dashboard/ddf.html' %}
+{% load static %}
 
 {% block title %}Dashboard - AFMS{% endblock %}
-{% load static  %}
-<link rel="stylesheet" href="{% static 'css/calender.css' %}">
-
-{% block page_title %}Calendar{% endblock %}
+{% block title_page %}Calendar of Activities {% endblock %}
 
 {% block content %}
-<div class="content" id="calender">
-    <h2> Hey {{user}} you have logged in as {{user.user_type}}. Welcome to the Farm Calendar </h2>
-    <p>Here you can manage farm activities, products, orders, and more.</p>
+<!-- Include Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-    <div class="content" id="calendar">
-        <h2>Calendar</h2>
+<div class="content">
+
+    <div id="calendar">
         <div class="calendar-controls">
-            <button onclick="changeMonth(-1)">Previous</button>
-            <div id="monthLabel"></div>
-            <button onclick="changeMonth(1)">Next</button>
+            <button onclick="changeMonth(-1)" class="btn btn-primary">Previous</button>
+            <div id="monthLabel" class="btn btn-light"></div>
+            <button onclick="changeMonth(1)" class="btn btn-primary">Next</button>
         </div>
         <div class="calendar-header">
-            <div>Sun</div>
-            <div>Mon</div>
-            <div>Tue</div>
-            <div>Wed</div>
-            <div>Thu</div>
-            <div>Fri</div>
-            <div>Sat</div>
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
         </div>
         <div class="calendar-grid" id="calendarGrid"></div>
     </div>
 </div>
 
+<!-- Activity Modal -->
+<div id="activityModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="activityModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form id="activityForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="activityModalLabel">Add Activity</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="selectedDate">
+          <div class="form-group">
+            <label for="activityName">Activity Name</label>
+            <input type="text" class="form-control" id="activityName" required>
+          </div>
+          <div class="form-group">
+            <label for="startTime">Start Time</label>
+            <input type="time" class="form-control" id="startTime" required>
+          </div>
+          <div class="form-group">
+            <label for="endTime">End Time</label>
+            <input type="time" class="form-control" id="endTime" required>
+          </div>
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" class="form-control" id="location" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Save Activity</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Include jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-    let currentYear = new Date().getFullYear(); // Initialize to current year
-    let currentMonth = new Date().getMonth(); // Initialize to current month
-    const today = new Date().getDate(); // Get current day
-    const todayMonth = new Date().getMonth(); // Get current month
-    const todayYear = new Date().getFullYear(); // Get current year
+    let currentYear = new Date().getFullYear();
+    let currentMonth = new Date().getMonth();
+    const today = new Date().getDate();
+    const todayMonth = new Date().getMonth();
+    const todayYear = new Date().getFullYear();
+    const activities = {};
 
     function updateCalendar(year, month) {
         const monthLabel = document.getElementById('monthLabel');
         const calendarGrid = document.getElementById('calendarGrid');
-        calendarGrid.innerHTML = ''; // Clear previous calendar
+        calendarGrid.innerHTML = '';
 
-        const monthNames = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'];
         monthLabel.textContent = `${monthNames[month]} ${year}`;
 
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
         const startDay = firstDay.getDay();
 
-        // Create empty boxes for the start of the month
         for (let i = 0; i < startDay; i++) {
             const emptyBox = document.createElement('div');
             emptyBox.classList.add('calendar-day', 'empty-day');
             calendarGrid.appendChild(emptyBox);
         }
 
-        // Create boxes for each day
         for (let day = 1; day <= lastDay.getDate(); day++) {
             const dayBox = document.createElement('div');
             dayBox.classList.add('calendar-day');
             dayBox.textContent = day;
 
-            // Highlight the current date
+            const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            if (activities[dateKey]) {
+                const act = activities[dateKey];
+                dayBox.classList.add('has-activity');
+                dayBox.setAttribute('title', `Name: ${act.name}\nStart Time: ${act.start}\nEnd Time: ${act.end}\nLocation: ${act.location}`);
+                $(dayBox).tooltip();
+            }
+
             if (day === today && month === todayMonth && year === todayYear) {
                 dayBox.classList.add('current-day');
             }
+
+            dayBox.addEventListener('click', () => {
+                document.getElementById('selectedDate').value = dateKey;
+                $('#activityModal').modal('show');
+            });
 
             calendarGrid.appendChild(dayBox);
         }
@@ -87,63 +130,107 @@
         updateCalendar(currentYear, currentMonth);
     }
 
-    window.onload = function() {
-        updateCalendar(currentYear, currentMonth);
+    document.getElementById('activityForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const date = document.getElementById('selectedDate').value;
+        const name = document.getElementById('activityName').value;
+        const start = document.getElementById('startTime').value;
+        const end = document.getElementById('endTime').value;
+        const location = document.getElementById('location').value;
+
+        fetch('/add-activity/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: JSON.stringify({ name, date, start, end, location })
+        })
+        .then(response => response.json())
+        .then(data => {
+            activities[date] = data.activity;
+            $('#activityModal').modal('hide');
+            updateCalendar(currentYear, currentMonth);
+        });
+    });
+
+    function getCSRFToken() {
+        return document.cookie.split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
+    }
+
+    function fetchActivities() {
+        fetch('/get-activities/')
+            .then(res => res.json())
+            .then(data => {
+                Object.assign(activities, data);
+                updateCalendar(currentYear, currentMonth);
+            });
+    }
+
+    window.onload = function () {
+        fetchActivities();
     };
 </script>
 
 <style>
-    /* Calendar Header */
-    .calendar-header {
+    .calendar-controls {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+    }
+
+    .calendar-header, .calendar-grid {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         text-align: center;
+    }
+
+    .calendar-day {
+        padding: 15px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+    }
+
+    .current-day {
+        background-color: #33910D;
+        color: white;
         font-weight: bold;
-        padding: 5px;
-        background-color: #f4f4f4;
+        border-radius: 5px;
     }
 
-    /* Calendar Grid */
-    .calendar-grid {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        grid-gap: 5px;
-        padding: 10px;
+    .has-activity {
+        background-color: #d9f7be;
     }
 
-/* Default Calendar Day */
-.calendar-day {
-    display: flex;
-    justify-content: center;  /* Centers horizontally */
-    align-items: center;  /* Centers vertically */
-    text-align: center;
-    padding: 15px; /* Increase padding for better spacing */
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 16px;  /* Increase font size */
-    width: 150px;  /* Fixed width */
-    height: 100px; /* Fixed height to make perfect square */
-}
+    .calendar-day:hover {
+        background-color: #c8e6c9;
+    }
 
-/* Highlight Current Date */
-.current-day {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-    border-radius: 5px;
-}
-
-/* Hover Effect */
-.calendar-day:hover {
-    background-color: #ddd;
-}
-
-    /* Empty Days (Before 1st of the Month) */
     .empty-day {
         background: none;
         border: none;
+    }
+
+    /* Modal Styles */
+    .modal-content {
+        padding: 20px;
+        border-radius: 5px;
+    }
+
+    .close {
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+    .modal-header {
+        background-color: #5cb85c;
+        color: white;
+    }
+
+    .modal-footer {
+        background-color: #f1f1f1;
     }
 </style>
 {% endblock %}

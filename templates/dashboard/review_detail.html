@@ -1,0 +1,24 @@
+{% extends 'dashboard/ddf.html' %}
+{% block title %}Review Detail{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+    <h4>Review by {{ review.customer_name.get_full_name }}</h4>
+    <p>{{ review.message }}</p>
+    <p><strong>Rating:</strong> {{ review.rating }} Stars</p>
+    <p><strong>Date:</strong> {{ review.date }}</p>
+    <p><strong>Likes:</strong> {{ review.likes_count }} | <strong>Dislikes:</strong> {{ review.dislikes_count }}</p>
+
+    <hr>
+
+    <h5>Comments</h5>
+    {% for comment in comments %}
+        <div class="mb-2">
+            <strong>{{ comment.user.username }}</strong> said: {{ comment.message }}
+            <small class="text-muted">on {{ comment.date }}</small>
+        </div>
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

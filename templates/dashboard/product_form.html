@@ -1,0 +1,16 @@
+{% extends 'dashboard/ddf.html' %}
+
+{% block page_title %} {{ title }} {% endblock %}
+
+{% block content %}
+<div class="content">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <div class="container d-flex flex-row gap-3 align-tems-center ">
+            <button type="submit" class="btn btn-success mt-3">Submit</button>
+            <a href="{% url 'userauth:products' %}"  class="btn btn-outline-success" style="height: 50%; margin-top: 15px;"> Back </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

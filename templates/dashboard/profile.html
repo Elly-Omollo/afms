@@ -4,21 +4,200 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/calender.css' %}">
 
-{% block page_title %}Profile{% endblock %}
+<!-- ✅ Custom Modal Animation & Image Hover -->
+<style>
+    /* Modal smooth fade and slide */
+    .modal.fade .modal-dialog {
+        transform: translateY(-40px);
+        opacity: 0;
+        transition: all 0.3s ease-out;
+    }
+    .modal.show .modal-dialog {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    /* Hover effect on image */
+    label[for="id_image"] img:hover {
+        opacity: 0.85;
+        transition: 0.2s ease;
+    }
+
+    /* Overlay Edit text on image */
+    .image-edit-overlay {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 2px 6px;
+        font-size: 12px;
+        border-top-left-radius: 5px;
+    }
+
+    .modal-body {
+        max-height: 30vh;
+        overflow-y: auto;
+    }
+</style>
+
+{% block title_page %}Profile {% endblock %}
 
 {% block content %}
 <div class="content" id="profile">
-    <h2> Hey {{user}} you have logged in as {{user.user_type}}. Welcome to the Farm user profile </h2>
-    <p>Here you can manage farm activities, products, orders, and more.</p>
 
-    <div class="content" id="profile">
-        <h2>User Profile</h2>
-        <div class="profile-card">
-            <img src="https://via.placeholder.com/120" alt="User Picture" />
-            <h2>Jane Doe</h2>
-            <p>Email: janedoe@example.com</p>
-            <p>Phone: +1234567890</p>
+    <!-- Profile Summary Card -->
+    <div class="card shadow mb-4">
+        <div class="card-body row align-items-center">
+            <div class="col-md-3 text-center">
+                <img id="profileImage" src="{% if user_profile.image %}{{ user_profile.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}"
+                     class="rounded-circle img-fluid border"
+                     style="width: 150px; height: 150px;" alt="Profile Picture">
+            </div>
+            <div class="col-md-9">
+                <h4>{{ user.first_name }} {{ user.last_name }}</h4>
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Phone:</strong> {{ user.phone }}</p>
+                <p><strong>Gender:</strong> {{ user.get_gender_display }}</p>
+                <p><strong>Location:</strong> {{ user_profile.city }}, {{ user_profile.state }}, {{ user_profile.country }}</p>
+
+                <!-- Edit Profile Button -->
+                <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                    Edit Profile
+                </button>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- ✅ Edit Profile Modal -->
+<div class="modal fade py-4 my-3" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content">
+            <form id="profileForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <!-- User Form -->
+                        <div class="col-md-6">
+                            <h6>Account Info</h6>
+                            {% for field in user_form %}
+                                <div class="mb-3">
+                                    <label class="form-label">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="text-danger">{{ field.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Profile Form -->
+                        <div class="col-md-6">
+                            <h6>Profile Info</h6>
+
+                            <!-- 🔁 Updated Clickable Image Upload -->
+                            <div class="mb-3">
+                                <label class="form-label d-block">Profile Picture</label>
+
+                                <!-- Hidden file input -->
+                                <input type="file" id="id_image" name="image" accept="image/*" hidden>
+
+                                <!-- Clickable preview image with overlay -->
+                                <label for="id_image" class="position-relative d-inline-block" style="cursor: pointer;">
+                                    <img id="imagePreview"
+                                         src="{% if user_profile.image %}{{ user_profile.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}"
+                                         class="img-thumbnail"
+                                         width="100"
+                                         alt="Profile Preview"
+                                         title="Click to change image">
+                                    <span class="image-edit-overlay">Edit</span>
+                                </label>
+                            </div>
+
+                            <!-- Other Profile Fields -->
+                            {% for field in profile_form %}
+                                {% if field.name != 'image' %}
+                                    <div class="mb-3">
+                                        <label class="form-label">{{ field.label }}</label>
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <div class="text-danger">{{ field.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Image Preview Script -->
+<script>
+document.getElementById("id_image").addEventListener("change", function(event) {
+    const [file] = this.files;
+    if (file) {
+        const preview = document.getElementById("imagePreview");
+        preview.src = URL.createObjectURL(file);
+    }
+});
+</script>
+
+<!-- ✅ AJAX Form Submission -->
+<script>
+document.getElementById('profileForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let formData = new FormData(this);
+
+    const button = document.querySelector('button[type="submit"]');
+    button.disabled = true;
+    button.textContent = "Saving...";
+
+    fetch("{% url 'userauth:update_profile' %}", {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Profile updated successfully!");
+
+            if (data.image_url) {
+                document.getElementById("profileImage").src = data.image_url;
+                document.getElementById("imagePreview").src = data.image_url;
+            }
+
+            let modal = bootstrap.Modal.getInstance(document.getElementById('editProfileModal'));
+            modal.hide();
+        } else {
+            alert("Error: " + data.error);
+        }
+
+        button.disabled = false;
+        button.textContent = "Save Changes";
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        alert("There was an error saving your profile.");
+        button.disabled = false;
+        button.textContent = "Save Changes";
+    });
+});
+</script>
+
 {% endblock %}

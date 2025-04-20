@@ -1,11 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h4>Review Pag</h4>
-</body>
-</html>
+{% extends 'base/base.html' %}
+
+<style>
+        .star-rating {
+            direction: rtl;
+            font-size: 2em;
+            display: inline-flex;
+        }
+        .star-rating input[type="radio"] {
+            display: none;
+        }
+        .star-rating label {
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .star-rating input[type="radio"]:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffcc00;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        .submit-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    </style>
+
+
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Add a Review</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Leave a Review</h1>
+                    <form method="post">
+                        {% csrf_token %}
+                        <label for="id_message">Your Review</label>
+                        {{ form.message }}
+                
+                        <label for="id_rating">Your Rating</label>
+                        <div class="star-rating">
+                            {% for i in "54321" %}
+                            <input type="radio" name="rating" id="star{{ i }}" value="{{ i }}">
+                            <label for="star{{ i }}">★</label>
+                            {% endfor %}
+                        </div>
+                
+                        <br><br>
+                        <button type="submit" class="submit-btn">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

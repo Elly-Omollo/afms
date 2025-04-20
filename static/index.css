@@ -213,6 +213,7 @@ height: 2px;
 
 .first {
     height: 100vh;
+    margin-top: 10px;
     color: #f5f5f5;
     flex-direction: column;
     font-weight: 900;
@@ -221,7 +222,7 @@ height: 2px;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
-    background-image: url(https://ununsplash.imgix.net/photo-1416339276121-ba1dfa199912?q=75&fm=jpg&s=9bf9f2ef5be5cb5eee5255e7765cb327);
+    /* background-image: url(https://ununsplash.imgix.net/photo-1416339276121-ba1dfa199912?q=75&fm=jpg&s=9bf9f2ef5be5cb5eee5255e7765cb327); */
 
 }
 
@@ -230,10 +231,11 @@ height: 2px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background: #fff;
     font-size: 2rem;
     font-weight: bold;
-    color: white;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    color: #8df2c8;
+    text-shadow: 1px 2px 5px rgba(27, 26, 26, 0.7);
 }
 
 .custom-button {

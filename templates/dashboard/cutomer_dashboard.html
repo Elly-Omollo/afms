@@ -1,0 +1,86 @@
+{% extends 'dashboard/ddf.html' %}
+
+{% block title %}Dashboard - AFMS{% endblock %}
+
+{% block title_page %}Dashboard{% endblock %}
+
+{% block content %}
+<style>
+  .card {
+    margin-bottom: 1rem;  /* Adds spacing between the cards */
+}
+
+.card-body {
+    padding: 1rem;  /* Padding inside the cards */
+}
+
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1.5rem;  /* More space on small screens */
+    }
+}
+
+</style>
+<div class="content" id="dashboard">
+
+
+
+
+  <!-- Farm Overview -->
+
+<div class="row mb-4">
+  <!-- Total Orders Card -->
+  <div class="col-12 col-md-3">
+      <div class="card text-white bg-success shadow-sm">
+          <div class="card-body text-center">
+              <h5>Total Orders</h5>
+              <h3>{{ stats.total_orders }}</h3>
+          </div>
+      </div>
+  </div>
+
+
+  <!-- Order Management Section -->
+  <div class="row mb-4">
+      <div class="col-12">
+          <div class="card">
+              <div class="card-header bg-info text-white">
+                  <h5>Order Management</h5>
+              </div>
+              <div class="card-body">
+                  <table class="table table-striped">
+                      <thead>
+                          <tr>
+                              <th>Order ID</th>
+                              <th>Product</th>
+                              <th>Quantity</th>
+                              <th>Status</th>
+                              <th>Payment Status</th>
+                              <th>Actions</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          {% for order in orders %}
+                          <tr>
+                              <td>{{ order.order_id }}</td>
+                              <td>{{ order.product.name }}</td>
+                              <td>{{ order.quantity }}</td>
+                              <td>{{ order.status }}</td>
+                              <td>{{ order.payment_status }}</td>
+                              <td>
+                                  <a href="{% url 'userauth:order_detail' order.id %}" class="btn btn-info btn-sm">View</a>
+                                  <a href="{% url 'userauth:order_update_status' order.id %}" class="btn btn-primary btn-sm">Update Status</a>
+                              </td>
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>
+
+
+</div>
+
+{% endblock %}

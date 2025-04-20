@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+
+
+{% block content %}
+    <!-- Contact Us Section -->
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2 class="mb-4 text-center">Contact Information</h2>
+                <p><strong>Agricultural Farm Management System (AFMS)</strong></p>
+                <p>1234 Address St, City, Country</p>
+                <p>Email: <a href="mailto:afms@softspin.co.ke">afms@softspin.co.ke</a></p>
+                <p>Phone: +254 78649088</p>
+                <p>Working Hours: Active 24/7</p>
+
+                <!-- Google Map Embed (you can replace with your actual location) -->
+                <div class="mt-4">
+                    <!-- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0150180268367!2d-122.41833908468196!3d37.77538337975833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085808db6b9d307%3A0x7f8a6bcb9ab559b9!2sPier+39!5e0!3m2!1sen!2sus!4v1612142203947!5m2!1sen!2sus" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe> -->
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.6835233526626!2d36.7266568735904!3d-1.366565498620503!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f051fc223e6c9%3A0x46afe71d2e294614!2sCooperative%20University%20of%20Kenya%2C%20Karen!5e0!3m2!1sen!2ske!4v1744178561139!5m2!1sen!2ske" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+
+            <div class="col-lg-6 shaddow-sm bg-light">
+                <h2 class="mb-4 text-center">Get in Touch</h2>
+                <form>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="subject" placeholder="Enter subject" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message</label>
+                        <textarea class="form-control" id="message" rows="5" placeholder="Enter your message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary ">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

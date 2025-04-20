@@ -1,0 +1,34 @@
+{% extends 'base/base.html' %}
+
+<!-- {% load static %} -->
+
+{% block content %}
+
+    <div class="container-fluid py-5">
+            <header class="product-header ">
+                <h1>Welcome to Your One-Stop Farm Shop!</h1>
+                <p>Discover the best  poultry for your farming needs. We make it easy for you to grow and thrive.</p>
+                <div class="search-bar">
+                    <input type="text" id="search" placeholder="Search for products..." onkeyup="searchProducts()">
+                </div>
+            </header>
+        
+            <!-- Search Bar -->
+      
+
+        <!-- Product Listings -->
+        <div class="products" id="product-list">
+            <!-- Sample product 6: Poultry -->
+             {% for p in poultry %}
+            <div class="product-card" data-category="poultry">
+                <img src="{{ p.image.url }}" alt="{{ p.name }}">
+                <h3>{{ p.name }}</h3>
+                <span></span>
+                <span>{{p.price}}</span>
+            </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
