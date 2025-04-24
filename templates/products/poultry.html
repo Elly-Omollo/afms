@@ -25,6 +25,10 @@
                 <h3>{{ p.name }}</h3>
                 <span></span>
                 <span>{{p.price}}</span>
+
+                <a href="{% url 'afms_app:place_order' p.id %}" class="btn btn-success mt-2">
+                    Order Now
+                </a>
             </div>
 
             {% endfor %}

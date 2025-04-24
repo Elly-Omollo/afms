@@ -24,7 +24,6 @@
 {% block content %}
 
     <div class="container-fluid py-5">
-        <h1>Crops page </h1>
             <header class="product-header ">
                 <h1>Welcome to Your One-Stop Farm Shop!</h1>
                 <p>Discover the best crops We make it easy for you to grow and thrive.</p>
@@ -36,39 +35,26 @@
             <!-- Search Bar -->
       
 
-        <!-- Product Listings -->
-        <div class="products" id="product-list">
-            <!-- Sample product 1: Crop -->
-            {% for crop in crops %}
-            <!-- Sample product 4: Crop -->
-            <div class="product-card" data-category="crop">
-                <img src="{{ crop.image.url }}" alt="{{ crop.name }}">
-                <h3>{{crop.name}}</h3>
-                <p>Fresh {{crop.namw}} for sale</p>
-                <span>{{crop.price}}</span>
+            <div class="products" id="product-list">
+                {% for crop in crops %}
+                    <div class="product-card" data-category="crop">
+                        <img src="{{ crop.image.url }}" alt="{{ crop.name }}">
+                        <h3>{{ crop.name }}</h3>
+                        <p>Fresh {{ crop.name }} for sale</p>
+                        <span>Price: {{ crop.price }}</span>
+                        
+                        <!-- Order Now button -->
+                        <a href="{% url 'afms_app:place_order' crop.id %}" class="btn btn-success mt-2">
+                            Order Now
+                        </a>
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-
-        </div>
 
         
     </div>
 
-    <div class="products" id="product-list">
-        {% for crop in crops %}
-            <div class="product-card" data-category="crop">
-                <img src="{{ crop.image.url }}" alt="{{ crop.name }}">
-                <h3>{{ crop.name }}</h3>
-                <p>Fresh {{ crop.name }} for sale</p>
-                <span>Price: {{ crop.price }}</span>
-                
-                <!-- Order Now button -->
-                <a href="{% url 'afms_app:place_order' crop.id %}" class="btn btn-success mt-2">
-                    Order Now
-                </a>
-            </div>
-        {% endfor %}
-    </div>
+
     
 
 {% endblock %}

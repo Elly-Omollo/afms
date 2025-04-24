@@ -192,7 +192,7 @@
                     <li><a href="{% url 'afms_app:livestock' %}">Livestock</a></li>
                     <li><a href="{% url 'afms_app:poultry' %}">Poultry</a></li>
                     <li><a href="{% url 'userauth:Contact Us' %}">Contact Us</a></li>
-                    <li><a href="{% url 'userauth:Contact Us' %}">My Order</a></li>
+                    <li><a href="{% url 'userauth:customer_oders' %}">My Order</a></li>
                 </ul>
                 <div class="d-flex gap-2">
                     {% if user.user_type == 'buyer'%}

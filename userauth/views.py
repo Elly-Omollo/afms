@@ -8,7 +8,7 @@ from django.http import JsonResponse
 
 from afms_app.forms import ProductForm
 from afms_app.models import Farm, Order, Product, ReviewComment, ReviewReaction, Vehicle, customer_review
-from .forms import CustomUserUpdateForm, ProfileUpdateForm, SignupForm
+from .forms import CustomUserUpdateForm, ProfileUpdateForm, SignupForm, VehicleForm
 from .models import OTPVerification, User
 from django.core.mail import send_mail
 from django.contrib.auth.hashers import make_password
@@ -97,14 +97,20 @@ def signupView(request):
             # Handle the OTP verification object
             OTPVerification.objects.update_or_create(email=email, defaults={'otp': otp})
 
+            print(f'otp generated :===============> {otp}')
+
+
+
             # Send OTP email
             try:
                 send_mail(
                     subject="Your OTP Verification Code",
                     message=f"Your OTP code is {otp}. Do not share this with anyone.",
-                    from_email="afms@softspin.co.ke",
+                    from_email="ebooking@shahibu.com",
                     recipient_list=[email],
                 )
+
+                print('=============Email sent successfully ================')
             except Exception as e:
                 # Handle email sending error
                 messages.error(request, 'There was an error sending the OTP. Please try again.')
@@ -214,7 +220,8 @@ def dashboard(request):
 
 
 def customer_dashboard(request):
-    return render(request, 'dashboard/cutomer_dashboard.html', {})
+    orders = Order.objects.filter(user=request.user).order_by('-order_date')  # Latest first
+    return render(request, 'dashboard/cutomer_dashboard.html', {'orders':orders})
 
 
 @login_required
@@ -254,6 +261,23 @@ def product_delete(request, pk):
     product = get_object_or_404(Product, id=pk, farm__user=request.user)
     product.delete()
     messages.success(request, "Product deleted.")
+    return redirect('dashboard')
+
+@login_required(login_url='userauth:Login View')
+def vehicle_edit(request,pk):
+    vehicle = get_object_or_404(Vehicle, id=pk)
+    form = VehicleForm(request.POST or None, request.FILES or None, instance=vehicle)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Vehicle updated.")
+        return redirect('dashboard')
+    return render(request,'dashboard/vehicle_edit.html', {})
+
+@login_required(login_url='userauth:Login View')
+def vehicle_delete(request, pk):
+    vehicle = get_object_or_404(Vehicle, id=pk)
+    vehicle.delete()
+    messages.success(request, "Vehicle deleted.")
     return redirect('dashboard')
 
 @login_required
@@ -367,4 +391,10 @@ def update_profile(request):
                 'error': errors
             })
 
+
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+def customer_oders(request):
+    orders = Order.objects.filter(user=request.user).order_by('-order_date')  # Latest first
+    return render(request, 'orders/customer_oders.html', {'orders':orders})

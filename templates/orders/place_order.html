@@ -1,141 +1,80 @@
-{% extends 'base/base.html' %}
+{% extends "base/base.html" %}
+{% load static %}
 
 {% block content %}
-<style>
-    .order-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2rem;
-        margin-top: 2rem;
-    }
+<div class="container mt-5">
+  <h3 class="mb-4">Place Order for <strong>{{ product.name }}</strong></h3>
 
-    .product-card {
-        flex: 1;
-        min-width: 280px;
-    }
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
 
-    .order-form {
-        flex: 2;
-        min-width: 320px;
-    }
-
-    .card-image img {
-        border-radius: 8px;
-    }
-</style>
-
-<div class="container">
-    <h2 class="mt-4 mb-4">Order Product: {{ product.name }}</h2>
-
-    <div class="order-container">
-        <!-- Product Card -->
-        <div class="card product-card shadow-sm">
-            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-            <div class="card-body">
-                <h5 class="card-title">{{ product.name }}</h5>
-                <p class="card-text"><strong>Price:</strong> {{ product.price }}</p>
-            </div>
-        </div>
-
-        <!-- Order Form -->
-        <div class="order-form">
-            <form method="post" id="orderForm">
-                {% csrf_token %}
-
-                <div class="form-group">
-                    <label>Product</label>
-                    <input type="text" class="form-control" value="{{ product.name }}" readonly>
-                </div>
-
-                <div class="form-group">
-                    <label>Price (each)</label>
-                    <input type="text" class="form-control" value="{{ product.price }}" readonly>
-                </div>
-
-                <div class="form-group">
-                    <label for="quantity">Quantity</label>
-                    <input type="number" min="1" name="quantity" class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="destination">Destination</label>
-                    <input type="text" name="destination" class="form-control" required>
-                </div>
-
-
-                <div class="form-group">
-                    <label>Payment Method</label><br>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="payment_method" value="pay_now" id="payNowRadio" required>
-                        <label class="form-check-label" for="payNowRadio">Pay Now</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="payment_method" value="cod" id="codRadio" required>
-                        <label class="form-check-label" for="codRadio">Pay on Delivery</label>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Place Order</button>
-            </form>
-        </div>
+  <div class="row">
+    <!-- Product Image -->
+    <div class="col-md-4 mb-3">
+      <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded shadow-sm">
     </div>
-</div>
 
-<!-- Modal for M-Pesa -->
-<div class="modal fade" id="mpesaModal" tabindex="-1" aria-labelledby="mpesaModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-        <form id="mpesaForm">
-            <div class="modal-header">
-                <h5 class="modal-title" id="mpesaModalLabel">Enter M-Pesa Number</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="mpesaNumber">M-Pesa Phone Number</label>
-                    <input type="text" class="form-control" id="mpesaNumber" name="mpesa_number" placeholder="e.g. 07XXXXXXXX" required>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-success">Confirm Payment</button>
-            </div>
-        </form>
+    <!-- Order Form -->
+    <div class="col-md-8 pb-5">
+      <form method="POST" class="card p-4 shadow-sm">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label for="quantity" class="form-label">Quantity</label>
+          <input type="number" name="quantity" id="quantity" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="destination" class="form-label">Destination</label>
+          <input type="text" name="destination" id="destination" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="vehicle" class="form-label">Vehicle</label>
+          <select name="vehicle" id="vehicle" class="form-select" required>
+            {% for vehicle in vehicles %}
+              <option value="{{ vehicle.id }}">{{ vehicle }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="payment_method" class="form-label">Payment Method</label>
+          <select name="payment_method" id="payment_method" class="form-select" onchange="toggleMpesaFields()" required>
+            <option value="on_delivery">On Delivery</option>
+            <option value="mpesa">M-Pesa</option>
+          </select>
+        </div>
+
+        <div id="mpesa_fields" style="display: none;">
+          <div class="mb-3">
+            <label for="mpesa_number" class="form-label">M-Pesa Number</label>
+            <input type="text" name="mpesa_number" id="mpesa_number" class="form-control">
+          </div>
+
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-success">Place Order</button>
+          <a href="{% url 'afms_app:cancel_order' product.id %}" class="btn btn-secondary">Cancel</a>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 
-<!-- Bootstrap & jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
-        const paymentNow = document.getElementById('payNowRadio').checked;
-        if (paymentNow) {
-            e.preventDefault(); // stop the form from submitting immediately
-            $('#mpesaModal').modal('show');  // show the modal
-        }
-    });
+  function toggleMpesaFields() {
+    const method = document.getElementById('payment_method').value;
+    document.getElementById('mpesa_fields').style.display = method === 'mpesa' ? 'block' : 'none';
+  }
 
-    document.getElementById('mpesaForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const mpesaNumber = document.getElementById('mpesaNumber').value;
-
-        if (mpesaNumber.trim().length < 10) {
-            alert('Please enter a valid M-Pesa number.');
-            return;
-        }
-
-        // Add M-Pesa number to the main form as hidden field
-        const hiddenInput = document.createElement('input');
-        hiddenInput.type = 'hidden';
-        hiddenInput.name = 'mpesa_number';
-        hiddenInput.value = mpesaNumber;
-        document.getElementById('orderForm').appendChild(hiddenInput);
-
-        // Hide the modal and submit the order form
-        $('#mpesaModal').modal('hide');
-        document.getElementById('orderForm').submit(); // now submit the main form
-    });
+  document.addEventListener('DOMContentLoaded', toggleMpesaFields);
 </script>
 {% endblock %}

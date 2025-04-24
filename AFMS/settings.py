@@ -140,20 +140,20 @@ LOGOUT_REDIRECT_URL = "userauth:Login View"
 
 
 
-EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'mail.softspin.co.ke'
-EMAIL_HOST_USER = 'afms@softspin.co.ke'
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = 'John3:16'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True  
-EMAIL_USE_SSL = False
-
-
 # EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'mail.shahibu.com'
-# EMAIL_HOST_USER = 'ebooking@shahibu.com'
+# EMAIL_HOST = 'mail.softspin.co.ke'
+# EMAIL_HOST_USER = 'afms@afms@softspin.co.ke'
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-# EMAIL_HOST_PASSWORD = 'Hr{Y,st!j}r8'
-# EMAIL_PORT = 465
-# EMAIL_USE_SSL = True
+# EMAIL_HOST_PASSWORD = 'John3:16'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True  
+# EMAIL_USE_SSL = False
+
+
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mail.shahibu.com'
+EMAIL_HOST_USER = 'ebooking@shahibu.com'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = 'Hr{Y,st!j}r8'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True

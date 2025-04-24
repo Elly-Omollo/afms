@@ -26,6 +26,7 @@ urlpatterns = [
     path('add-activity/', views.add_activity, name='add_activity'),
     path('get_reviews/', views.get_reviews, name='get_reviews'),
     path('place/<int:product_id>/', views.place_order, name='place_order'),
+    path('cancel/<int:product_id>/', views.cancel_order, name='cancel_order'),
 
 
 

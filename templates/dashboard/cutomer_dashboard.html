@@ -34,15 +34,18 @@
       <div class="card text-white bg-success shadow-sm">
           <div class="card-body text-center">
               <h5>Total Orders</h5>
-              <h3>{{ stats.total_orders }}</h3>
+              <h3>{{orders.count }}</h3>
           </div>
       </div>
   </div>
 
 
   <!-- Order Management Section -->
+
+
   <div class="row mb-4">
       <div class="col-12">
+        {% if orders %}
           <div class="card">
               <div class="card-header bg-info text-white">
                   <h5>Order Management</h5>
@@ -54,6 +57,7 @@
                               <th>Order ID</th>
                               <th>Product</th>
                               <th>Quantity</th>
+                              <th>total amount</th>
                               <th>Status</th>
                               <th>Payment Status</th>
                               <th>Actions</th>
@@ -65,11 +69,11 @@
                               <td>{{ order.order_id }}</td>
                               <td>{{ order.product.name }}</td>
                               <td>{{ order.quantity }}</td>
+                              <td><strong>KES {{ order.total_amount }}</strong></td>
                               <td>{{ order.status }}</td>
                               <td>{{ order.payment_status }}</td>
                               <td>
                                   <a href="{% url 'userauth:order_detail' order.id %}" class="btn btn-info btn-sm">View</a>
-                                  <a href="{% url 'userauth:order_update_status' order.id %}" class="btn btn-primary btn-sm">Update Status</a>
                               </td>
                           </tr>
                           {% endfor %}
@@ -77,7 +81,20 @@
                   </table>
               </div>
           </div>
+          {% else %}
+          <div class="alert alert-info text-center">
+              <h4 class="fw-bold text-danger">You have not placed any orders yet.</h4>
+              <div class="d-flex justify-content-center gap-3 mt-3">
+                  <a href="{% url 'afms_app:Home page' %}" class="btn btn-outline-primary">Home</a>
+                  <a href="{% url 'afms_app:crops' %}" class="btn btn-outline-success">Get Crops</a>
+                  <a href="{% url 'afms_app:livestock' %}" class="btn btn-outline-warning">Get Livestock</a>
+                  <a href="{% url 'afms_app:poultry' %}" class="btn btn-outline-danger">Get Poultry</a>
+              </div>
+          </div>
+          {% endif %}  
       </div>
+
+
   </div>
 
 

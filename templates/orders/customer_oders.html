@@ -1,0 +1,77 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4 text-center text-primary">Your Orders</h2>
+
+    {% if orders %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Destination</th>
+                    <th scope="col">Vehicle</th>
+                    <th scope="col">Order Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Payment</th>
+                    <th scope="col">Total Amount</th>
+                    <th>action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.product.name }}</td>
+                    <td>{{ order.quantity }}</td>
+                    <td>{{ order.destination }}</td>
+                    <td>{{ order.vehicle.name }}</td>
+                    <td>{{ order.order_date|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if order.status == 'pending' %}bg-warning
+                            {% elif order.status == 'processing' %}bg-info
+                            {% elif order.status == 'shipped' %}bg-success
+                            {% endif %}
+                        ">
+                            {{ order.status|capfirst }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge 
+                            {% if order.payment_status == 'pending' %}bg-danger
+                            {% else %}bg-success
+                            {% endif %}
+                        ">
+                            {{ order.payment_status|capfirst }}
+                        </span>
+                    </td>
+                    <td><strong>KES {{ order.total_amount }}</strong></td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    {% if order.status == "pending" %}
+                    <a href="{% url 'afms_app:cancel_order' order.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to cancel this order?');">
+                        Cancel
+                    </a>
+                    {% endif %}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <h4 class="fw-bold text-danger">You have not placed any orders yet.</h4>
+        <div class="d-flex justify-content-center gap-3 mt-3">
+            <a href="{% url 'afms_app:Home page' %}" class="btn btn-outline-primary">Home</a>
+            <a href="{% url 'afms_app:crops' %}" class="btn btn-outline-success">Get Crops</a>
+            <a href="{% url 'afms_app:livestock' %}" class="btn btn-outline-warning">Get Livestock</a>
+            <a href="{% url 'afms_app:poultry' %}" class="btn btn-outline-danger">Get Poultry</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

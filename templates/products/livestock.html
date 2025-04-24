@@ -22,11 +22,15 @@
                 <!-- Sample product 1: Crop -->
                 {% for l in livestock %}
                 <!-- Sample product 4: Crop -->
-                <div class="product-card" data-category="crop">
+                <div class="product-card py-3" data-category="crop">
                     <img src="{{ l.image.url }}" alt="{{ l.name }}">
                     <h3>{{l.name}}</h3>
                     <p>Fresh {{l.name}} for sale</p>
                     <span>{{l.price}}</span>
+
+                    <a href="{% url 'afms_app:place_order' l.id %}" class="btn btn-success mt-2">
+                        Order Now
+                    </a>
                 </div>
                 {% endfor %}
     

@@ -23,10 +23,16 @@
     <h2>AFMS</h2>
     <hr style="height: 2px; background-color: white;" />
     <ul>
+      
+      {% if user.user_type == 'buyer' %}
+      <li><a href="{% url 'userauth:dashboard' %}">Dashboard</a></li>
+      <li><a href="{% url 'userauth:profile' %}">Profile</a></li>
+      {% else %}
       <li><a href="{% url 'userauth:dashboard' %}">Dashboard</a></li>
       <li><a href="{% url 'userauth:products' %}">Products</a></li>
       <li><a href="{% url 'userauth:calender' %}">Calendar</a></li>
       <li><a href="{% url 'userauth:profile' %}">Profile</a></li>
+      {% endif %}
     </ul>
     <a href="{% url 'userauth:Logout View' %}" type="button" class="btn btn-outline-danger">Logout</a>
   </div>

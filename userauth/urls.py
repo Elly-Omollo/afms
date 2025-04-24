@@ -16,10 +16,13 @@ urlpatterns = [
     path('calender/', views.calender, name='calender'),
     path('profile/', views.profile, name='profile'),
     path('profile/update/', views.update_profile, name='update_profile'),
+    path('customer/order/', views.customer_oders, name='customer_oders'),
 
     path('product/create/', views.product_create, name='product_create'),
     path('product/<int:pk>/edit/', views.product_edit, name='product_edit'),
+    path('vehicle/<int:pk>/edit/', views.vehicle_edit, name='vehicle_edit'),
     path('product/<int:pk>/delete/', views.product_delete, name='product_delete'),
+    path('vehicle/<int:pk>/delete/', views.vehicle_delete, name='vehicle_delete'),
     path('order/<int:pk>/detail/', views.order_detail, name='order_detail'),
     path('review/<int:pk>/detail/', views.review_detail, name='review_detail'),
     path('review/<int:pk>/approve/', views.review_approve, name='review_approve'),

@@ -81,6 +81,11 @@ class Vehicle(models.Model):
 
 
 class Order(models.Model):
+    PAYMENT_METHODS = [
+        ('mpesa', 'M-Pesa'),
+        ('on_delivery', 'On Delivery'),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     order_id = ShortUUIDField(unique=True, length=6, max_length=20, alphabet="abcdefghijklmnopqrstuvwxyz123")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -90,7 +95,16 @@ class Order(models.Model):
     order_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=50, choices=[('pending', 'Pending'), ('processing', 'Processing'), ('shipped', 'Shipped')], default='pending')
     payment_status = models.CharField(max_length=50, choices=[('pending', 'Pending'), ('paid', 'Paid')], default='pending')
-    total_amount = models.DecimalField(decimal_places=2, max_digits=10)  # Automatically calculate total price
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS, default='on_delivery')
+    mpesa_number = models.CharField(max_length=15, blank=True, null=True)
+    mpesa_receipt_code = models.CharField(max_length=20, blank=True, null=True)
+    total_amount = models.DecimalField(decimal_places=2, max_digits=10)
+    status = models.CharField(max_length=50, choices=[
+        ('pending', 'Pending'),
+        ('processing', 'Processing'),
+        ('shipped', 'Shipped'),
+        ('cancelled', 'Cancelled')
+    ], default='pending')
 
     class Meta:
         verbose_name_plural = 'Orders'
@@ -99,9 +113,9 @@ class Order(models.Model):
         return f"Order for {self.user.email} - {self.order_id}"
 
     def save(self, *args, **kwargs):
-        # Calculate total price
         self.total_amount = self.product.price * self.quantity
         super().save(*args, **kwargs)
+
 
 
 

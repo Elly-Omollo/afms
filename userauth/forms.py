@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+
+from afms_app.models import Vehicle
 from .models import Profile, User
 from django.forms.widgets import ClearableFileInput  
 
@@ -44,3 +46,15 @@ class ProfileUpdateForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             if field.widget.input_type != 'file':
                 field.widget.attrs['class'] = 'form-control'
+
+
+class VehicleForm(forms.ModelForm):
+    class Meta:
+        model = Vehicle
+        fields = ['is_available','state']
+        widgets = {
+            'is_available': forms.CheckboxInput(attrs={'class': 'form-control'}),
+            'state': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+

@@ -2,6 +2,7 @@ from datetime import datetime
 import json
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
 from django.contrib import messages
 from afms_app.forms import CustomerReviewForm, ProductForm
@@ -143,15 +144,26 @@ def poultry(request):
 @login_required
 def place_order(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    vehicles = Vehicle.objects.all()  # Or filter by user if needed
+    vehicles = Vehicle.objects.all()
 
     if request.method == 'POST':
-        quantity = int(request.POST.get('quantity'))
+        quantity = int(request.POST.get('quantity', 1))
         destination = request.POST.get('destination')
         vehicle_id = request.POST.get('vehicle')
         payment_method = request.POST.get('payment_method')
 
+        mpesa_number = request.POST.get('mpesa_number', '').strip()
+        mpesa_receipt_code = request.POST.get('mpesa_receipt_code', '').strip()
+
         vehicle = get_object_or_404(Vehicle, id=vehicle_id)
+
+        if payment_method == 'mpesa':
+            if not mpesa_number or not mpesa_receipt_code:
+                messages.error(request, "Please provide both M-Pesa number and receipt code.")
+                return render(request, 'orders/place_order.html', {
+                    'product': product,
+                    'vehicles': vehicles,
+                })
 
         order = Order.objects.create(
             user=request.user,
@@ -159,25 +171,57 @@ def place_order(request, product_id):
             quantity=quantity,
             destination=destination,
             vehicle=vehicle,
-            payment_status='paid' if payment_method == 'pay_now' else 'pending',
+            payment_status='paid' if payment_method == 'mpesa' else 'pending',
+            payment_method=payment_method,
+            mpesa_number=mpesa_number if payment_method == 'mpesa' else None,
+            mpesa_receipt_code=mpesa_receipt_code if payment_method == 'mpesa' else None,
+            status = 'processing'
         )
 
         messages.success(request, "Order placed successfully!")
-        return redirect('orders:order_list')
+        return redirect('userauth:customer_oders')
 
     return render(request, 'orders/place_order.html', {
         'product': product,
         'vehicles': vehicles,
     })
 
-
+@login_required
+def cancel_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    if order.status == 'pending':
+        order.status = 'cancelled'
+        order.save()
+        messages.success(request, 'Order cancelled successfully.')
+    else:
+        messages.error(request, 'You can only cancel pending orders.')
+    return redirect('userauth:customer_oders')
 
 
 
 
 
 def customer_profile(request):
-    return render(request, 'dashboard/customer_profile.html', {})
+    user = request.user
+
+    if user.user_type == 'buyer':
+        profile = getattr(user, 'profile', None)
+        
+        context = {
+            'name': profile.full_name if profile and profile.full_name else f"{user.first_name} {user.last_name}",
+            'email': user.email,
+            'phone': user.phone,
+            'gender': user.gender,
+            'location': f"{profile.city}, {profile.state}, {profile.country}" if profile else '',
+            'address': profile.address if profile else '',
+            'user_type': user.user_type,
+            'profile_image': profile.image.url if profile and profile.image else '/media/default.jpg',
+        }
+
+        return render(request, 'dashboard/customer_profile.html', context)
+    
+    return render(request, 'dashboard/access_denied.html', {'message': 'Access restricted to buyers only.'})
+
 
 
 
@@ -243,11 +287,6 @@ def get_reviews(request):
 import base64
 import hashlib
 import requests
-from datetime import datetime
-from django.conf import settings
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.http import JsonResponse
 
 def initiate_payment(request, order_id):
     if request.method == 'POST':
